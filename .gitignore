@@ -1,0 +1,22 @@
+# Private and working documents
+*.docx
+documents/test1.pdf
+
+# Original email screenshots
+images/nagios/nagios-critical-alert.png
+images/nagios/nagios-recovery-alert.png
+
+# Editor and operating system files
+.vscode/
+.DS_Store
+*~
+
+# Previous CV versions
+documents/Jhonny_Castillo_Morales_CV_Professional.pdf
+documents/CV/Jhonny_Castillo_Morales_CV_Professional_Centred.pdf
+
+# LibreOffice temporary files
+.~lock.*#
+
+# Private Nagios screenshots
+images/nagios/no editar/

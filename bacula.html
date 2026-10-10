@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Bacula Backup Server Lab | Jhonny Castillo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <a href="index.html#projects" class="back-link">← Back to Projects</a>
+
+    <header class="project-header">
+        <h1>Bacula Backup Server Lab</h1>
+        <p>Centralised Backup Infrastructure Project</p>
+    </header>
+    <section class="project-section project-overview">
+
+    <h2>Project Overview</h2>
+
+    <p>
+        This project demonstrates the deployment and administration of a
+        centralised backup and recovery infrastructure using Bacula across
+        virtualised, physical and network-attached storage environments.
+    </p>
+
+    <p>
+        A dedicated Debian 13 virtual machine operates as the central
+        Bacula server, providing backup orchestration, storage management
+        and catalogue services. A physical HP Z400 Linux workstation is
+        configured as a remote Bacula client and protected across the
+        local network.
+    </p>
+
+    <p>
+        The lab covers scheduled Full, Differential and Incremental
+        backups, PostgreSQL catalogue protection, remote client
+        communication and file-level disaster recovery.
+    </p>
+</section>
+
+<section class="project-section">
+    <h2>Lab Architecture</h2>
+
+    <p>
+    The environment combines a physical Linux backup client, a virtualised
+    Bacula server and network-attached storage. Backup and recovery jobs are
+    centrally managed by the Bacula Director on the Debian server, while
+    backup volumes are written to a Synology NAS through an NFS share mounted
+    at <code>/backup</code> on the Bacula server.
+</p>
+
+    <div class="architecture">
+
+        <div class="architecture-box">
+            <h3>HP Z400 WORKSTATION</h3>
+            <p>Physical Linux Client</p>
+            <p>Bacula File Daemon</p>
+            <p>Remote Backup Client</p>
+            <p>File-Level Recovery Target</p>
+        </div>
+
+        <div class="architecture-box">
+            <h3>BACULA-SERVER</h3>
+            <p>Debian 13 Virtual Machine</p>
+            <p>VirtualBox</p>
+            <p>Bacula Director</p>
+            <p>Storage Daemon</p>
+            <p>PostgreSQL Catalogue</p>
+            <p>Bconsole</p>
+        </div>
+
+        <div class="architecture-box">
+            <h3>SYNOLOGY NAS</h3>
+            <p>Network Backup Storage</p>
+            <p>NFS Share</p>
+            <p>/volume1/BaculaBackups</p>
+            <p>Mounted at /backup</p>
+            <p>Bacula Backup Volumes</p>
+        </div>
+
+    </div>
+</section>
+
+<section class="project-section">
+    <h2>Implementation</h2>
+
+  <p>
+    The Bacula environment was deployed as a centralised backup solution
+    combining a virtualised server, a physical Linux client and
+    network-attached storage.
+</p>
+
+<h3>Bacula Server Deployment</h3>
+
+<p>
+    A Debian 13 virtual machine was deployed in VirtualBox as the central
+    backup server. Bacula Director, Storage Daemon, PostgreSQL catalogue
+    and Bconsole were installed and configured to manage backup jobs,
+    storage resources and recovery operations.
+</p>
+
+<h3>Physical Client Integration</h3>
+
+<p>
+    The HP Z400 Linux workstation was integrated as a remote backup client
+    using the Bacula File Daemon. Communication between the client and
+    Bacula Director was configured across the local network, allowing the
+    server to centrally manage backup and recovery operations.
+</p>
+
+<h3>Network Storage Integration</h3>
+
+<p>
+    A dedicated Synology NAS share at <code>/volume1/BaculaBackups</code>
+    was configured for network backup storage and mounted on the Bacula
+    server at <code>/backup</code> using NFS. Bacula was then configured
+    to use this mounted storage location for its backup volumes.
+</p>
+</section>
+
+
+
+<section class="project-section">
+    <h2>Backup Configuration</h2>
+
+    <p>
+    The HP Z400 workstation is protected by a dedicated Bacula backup
+    job named <strong>Backup-Z400</strong>. The job defines the client,
+    FileSet, backup schedule and storage resources, with backup volumes
+    written to the Synology NAS through the NFS storage mounted on the
+    Bacula server.
+</p>
+
+    <div class="validation-step">
+        <h3>Client and FileSet Configuration</h3>
+
+        <p>
+            The physical HP Z400 workstation communicates with the Bacula
+            Director through the Bacula File Daemon. The
+            <strong>Z400-Home</strong> FileSet protects the
+            <code>/home/jhonny</code> directory.
+        </p>
+
+        <p>
+            VirtualBox virtual machine directories are excluded from the
+            FileSet to prevent large VM disk images from being included
+            unnecessarily in the workstation backup.
+        </p>
+
+        <img src="images/bacula/show job Backup-Z400.png"
+             alt="Bacula Backup-Z400 job and FileSet configuration"
+             class="project-image">
+    </div>
+
+    <div class="validation-step">
+        <h3>Backup Schedule</h3>
+
+        <p>
+    The backup policy uses a monthly Full backup on the first Sunday,
+    Differential backups on the remaining Sundays, and Incremental
+    backups from Monday to Saturday. All scheduled backup jobs run
+    at 23:05.
+</p>
+
+<p>
+    This strategy provides a complete baseline while reducing the
+    amount of data processed during subsequent backup operations.
+    Backup volumes are written to the Synology NAS through the NFS
+    storage mounted at <code>/backup</code> on the Bacula server.
+</p>
+
+        <p>
+            The Bacula Director automatically schedules and coordinates
+            these jobs using the configured storage pool and catalogue.
+        </p>
+
+<img src="images/bacula/status director final.png"
+     alt="Bacula Director showing scheduled and successfully completed backup jobs"
+     class="project-image">
+
+<p class="image-caption">
+    Bacula Director status confirming scheduled backup jobs and successfully
+    completed backup operations.
+</p>
+    </div>
+</section>
+
+<section class="project-section">
+    <h2>Backup & Recovery Validation</h2>
+
+    <p>
+        To validate the backup infrastructure, I performed an end-to-end
+        backup and recovery test using the physical HP Z400 Linux workstation
+        as a remote Bacula client.
+    </p>
+
+    <p>
+        The test simulated a real data-loss scenario: a test file was created,
+        captured by an incremental backup, deliberately deleted from the client
+        and subsequently recovered using the Bacula catalogue and storage volume.
+        The restored file was then verified directly on the workstation.
+    </p>
+
+    <!-- STEP 1 -->
+    <div class="validation-step">
+        <h3>1. Test File & Backup</h3>
+
+        <p>
+            A dedicated test file was created on the HP Z400 workstation
+            specifically for the recovery test. Its contents were verified
+            before running the backup.
+        </p>
+
+        <p>
+            An incremental backup was then executed. Bacula completed
+            JobId 15 successfully, capturing the new test file as part of
+            the changed data on the client.
+        </p>
+
+        <img src="images/bacula/bacula-test.png"
+             alt="Test file created on the HP Z400 before the Bacula backup"
+             class="project-image">
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="validation-step">
+        <h3>2. Simulated Data Loss</h3>
+
+        <p>
+            After confirming that the test file had been protected by the
+            backup, it was deliberately deleted from the HP Z400 workstation
+            to simulate accidental data loss.
+        </p>
+
+        <p>
+            Listing the directory afterwards confirmed that the file was no
+            longer present on the local filesystem.
+        </p>
+
+        <img src="images/bacula/texto borrado.png"
+             alt="Test file deliberately deleted from the HP Z400 workstation"
+             class="project-image">
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="validation-step">
+        <h3>3. Catalogue-Based File Recovery</h3>
+
+        <p>
+            The Bacula restore interface in Bconsole was used to locate the
+            deleted file from the backup catalogue. The required backup JobId
+            was selected and the individual file was marked for restoration.
+        </p>
+
+        <p>
+    The HP Z400 File Daemon was selected as the restore client and
+    the file was restored to a dedicated recovery location for
+    verification before being returned to its normal location.
+        </p>
+
+        <img src="images/bacula/restauracion terminada.png"
+             alt="Bacula catalogue file selection and restore configuration"
+             class="project-image">
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="validation-step">
+        <h3>4. Restore Job Validation</h3>
+
+        <p>
+            Bacula successfully completed Restore JobId 16. The Director
+            reported one restored file, 58 bytes transferred and an
+            <strong>OK</strong> termination status.
+        </p>
+
+        <img src="images/bacula/restauracion final.png"
+             alt="Bacula Restore JobId 16 completed successfully"
+             class="project-image">
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="validation-step">
+        <h3>5. Recovery Verification</h3>
+
+         <p>
+    The recovered file was verified directly on the HP Z400
+    workstation using Linux command-line tools. The restored file
+    was confirmed in the dedicated recovery location with the
+    expected size and contents.
+        </p>
+
+        <img src="images/bacula/final.png"
+             alt="Recovered file verified on the HP Z400 Linux workstation"
+             class="project-image">
+    </div>
+
+    <!-- RESULT -->
+    <div class="project-result">
+        <h3>Result</h3>
+
+        <p>
+            The recovery test successfully demonstrated the complete
+            backup lifecycle: data protection, simulated data loss,
+            catalogue-based recovery, restoration and post-recovery
+            verification.
+        </p>
+
+        <p>
+            This confirmed that the Bacula infrastructure was capable not
+            only of completing scheduled backups, but also of recovering
+            individual files successfully when required.
+        </p>
+    </div>
+</section>
+
+<section class="project-section">
+    <h2>Challenges & Troubleshooting</h2>
+
+    <p>
+        During the deployment and validation of the Bacula environment,
+        several configuration and operational checks were required to
+        distinguish backup infrastructure issues from secondary service
+        warnings.
+    </p>
+
+    <div class="troubleshooting-card">
+        <h3>Bacula Service Validation</h3>
+
+        <p>
+            The Bacula Director service was inspected using
+            <code>systemctl</code> to verify that the daemon was running
+            correctly after configuration changes.
+        </p>
+
+        <p>
+            The service remained <strong>active (running)</strong>, confirming
+            that the Bacula Director itself was operational.
+        </p>
+
+        <img src="images/bacula/systemctl status bacula-director.png"
+             alt="Bacula Director service status verified with systemctl"
+             class="project-image">
+    </div>
+
+    <div class="troubleshooting-card">
+        <h3>Notification Delivery Error</h3>
+
+    <p>
+    System logs reported message delivery errors involving
+    <code>bsmtp</code>. Investigation showed that these warnings were
+    associated with Bacula's email notification mechanism rather than
+    backup or restore job execution.
+    </p>
+
+        <p>
+            The issue was isolated by comparing the systemd service status
+            with the results reported by Bconsole. Backup and restore jobs
+            continued to complete successfully with an
+            <strong>OK</strong> termination status.
+        </p>
+    </div>
+
+    <div class="troubleshooting-card">
+        <h3>Validation Approach</h3>
+
+        <p>
+            Configuration and runtime behaviour were verified using
+            <code>systemctl</code>, <code>journalctl</code>,
+            <code>bconsole</code>, Bacula configuration validation and
+            Linux command-line tools.
+        </p>
+
+        <p>
+            This troubleshooting process helped separate infrastructure
+            health, backup job execution and notification delivery into
+            independently verifiable components.
+        </p>
+    </div>
+</section>
+
+
+
+<section class="project-section">
+    <h2>Skills Demonstrated</h2>
+
+    <p>
+        This project provided hands-on experience in deploying,
+        configuring and validating a centralised backup and recovery
+        infrastructure.
+    </p>
+
+<div class="skills-grid">
+
+    <div class="skill-card">
+        <h3>Linux Administration</h3>
+        <p>- Debian 13</p>
+        <p>- Ubuntu</p>
+        <p>- systemd</p>
+        <p>- CLI</p>
+        <p>- Service Management</p>
+    </div>
+
+    <div class="skill-card">
+        <h3>Backup & Recovery</h3>
+        <p>- Bacula</p>
+        <p>- Full Backup</p>
+        <p>- Differential Backup</p>
+        <p>- Incremental Backup</p>
+        <p>- File-Level Restore</p>
+    </div>
+
+    <div class="skill-card">
+        <h3>Infrastructure</h3>
+        <p>- VirtualBox</p>
+        <p>- Synology NAS</p>
+        <p>- NFS</p>
+        <p>- Physical & Virtual Infrastructure</p>
+        <p>- Client/Server Architecture</p>
+    </div>
+
+    <div class="skill-card">
+        <h3>Database & Catalogue</h3>
+        <p>- PostgreSQL</p>
+        <p>- Bacula Catalogue</p>
+        <p>- Backup Catalogue Management</p>
+    </div>
+
+    <div class="skill-card">
+        <h3>Troubleshooting</h3>
+        <p>- systemctl</p>
+        <p>- journalctl</p>
+        <p>- Service Validation</p>
+        <p>- Log Analysis</p>
+    </div>
+
+    <div class="skill-card">
+        <h3>Disaster Recovery</h3>
+        <p>- Data-Loss Simulation</p>
+        <p>- Catalogue Recovery</p>
+        <p>- Recovery Verification</p>
+    </div>
+
+</div>
+</section>
+
+
+<section class="project-section">
+    <h2>Technical Documentation</h2>
+
+    <p>
+        Read the complete Bacula Backup Server laboratory
+        documentation, including installation, backup
+        configuration, NAS integration, troubleshooting
+        and recovery validation.
+    </p>
+
+    <div class="cv-container">
+        <a
+            href="documents/labs/Bacula_Backup_Server_Lab.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="cv-button"
+        >
+            View Bacula Technical Documentation (PDF)
+        </a>
+    </div>
+</section>
+
+
+
+</body>
+
+</html>

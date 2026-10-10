@@ -1,0 +1,482 @@
+
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nagios Monitoring Lab | Jhonny Castillo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="nagios-page">
+
+<a href="index.html#projects" class="back-link">
+    &larr; Back to Projects
+</a>
+
+<header class="project-header">
+    <h1>Nagios Monitoring Lab</h1>
+    <p>
+        Infrastructure Monitoring | Linux & Windows |
+        Alerting & Performance Monitoring
+    </p>
+</header>
+
+<section class="project-section project-overview">
+    <h2>Project Overview</h2>
+    <p>
+        Designed and implemented a centralised infrastructure
+        monitoring environment using Nagios Core on Debian Linux.
+        The solution monitors physical and virtual systems,
+        network connectivity, resource utilisation, critical
+        services and Bacula backup operations.
+    </p>
+    <p>
+        The laboratory also includes automated email notifications,
+        historical performance graphs and backup health monitoring.
+    </p>
+</section>
+
+<section class="project-section">
+    <h2>Lab Architecture</h2>
+
+    <div class="architecture">
+        <div class="architecture-box">
+            <h3>NAGIOS-SERVER</h3>
+            <p>Debian 13 Virtual Machine</p>
+            <p>Nagios Core 4.4.6</p>
+            <p>IP: 192.168.1.83</p>
+        </div>
+
+        <div class="architecture-box">
+            <h3>HP Z400 WORKSTATION</h3>
+            <p>Physical Linux Workstation</p>
+            <p>NRPE Monitoring Agent</p>
+            <p>IP: 192.168.1.201</p>
+        </div>
+
+        <div class="architecture-box">
+            <h3>WINDOWS 10 CLIENT</h3>
+            <p>Physical Windows Workstation</p>
+            <p>NSClient++ Monitoring Agent</p>
+            <p>IP: 192.168.1.184</p>
+        </div>
+
+        <div class="architecture-box">
+            <h3>BACULA-SERVER</h3>
+            <p>Debian Virtual Machine</p>
+            <p>Bacula and PostgreSQL Services</p>
+            <p>IP: 192.168.1.118</p>
+        </div>
+    </div>
+</section>
+
+<section class="project-section implementation">
+    <h2>Implementation</h2>
+
+    <h3>Nagios Core Deployment</h3>
+    <p>
+        Installed and configured Nagios Core, Apache and monitoring
+        plugins on a Debian virtual machine. Enabled CGI support
+        to provide access to the web monitoring interface.
+    </p>
+
+    <h3>Linux Monitoring with NRPE</h3>
+    <p>
+        Configured NRPE agents and custom monitoring scripts
+        to collect system load, memory utilisation, disk usage,
+        uptime, process status and service availability.
+    </p>
+
+    <h3>Windows Monitoring with NSClient++</h3>
+    <p>
+        Integrated a physical Windows 10 workstation to monitor
+        connectivity, CPU utilisation, memory and disk capacity.
+    </p>
+
+    <h3>Bacula Integration</h3>
+    <p>
+        Developed monitoring checks for Bacula backup jobs,
+        storage availability and essential services, including
+        Bacula Director, Storage Daemon and PostgreSQL.
+    </p>
+</section>
+
+<section class="project-section">
+    <h2>Monitoring Configuration</h2>
+
+
+<div class="validation-step">
+    <h3>Host and Service Monitoring</h3>
+
+    <p>
+        Configured Nagios Core to monitor four hosts and
+        40 services across Linux and Windows systems.
+        Monitoring includes network connectivity, CPU load,
+        memory utilisation, disk capacity, system processes,
+        service availability and Bacula backup health.
+    </p>
+
+    <img
+        src="images/nagios/nagios-services.png"
+        alt="Nagios Core monitoring dashboard showing host and service status"
+        class="project-image"
+        loading="lazy"
+    >
+</div>
+
+
+    <div class="validation-step">
+        <h3>Backup Job Health Checks</h3>
+        <p>
+            Implemented custom NRPE checks that query the
+            Bacula PostgreSQL catalogue to verify the status
+            of Linux and Windows backup jobs and detect
+            failed or overdue backups.
+        </p>
+    </div>
+</section>
+
+<section class="project-section">
+    <h2>Monitoring Dashboard &amp; Graphs</h2>
+
+
+
+<p>
+    Developed a custom RRDTool performance monitoring
+    dashboard with 11 historical graphs across Linux,
+    Windows and Bacula infrastructure. Metric collection
+    and graph generation are automated using systemd timers.
+</p>
+
+<div class="validation-step">
+    <h3>HP Z400 Workstation – Linux Monitoring</h3>
+    <p>
+        Historical system load and memory utilisation
+        monitoring on the physical Linux workstation
+        using Nagios Core and NRPE.
+    </p>
+    <img
+        src="images/nagios/nagios-rrdtool-dashboard1.png"
+        alt="HP Z400 Linux system load and memory monitoring graphs"
+        class="project-image"
+        loading="lazy"
+    >
+</div>
+
+<div class="validation-step">
+    <h3>Windows 10 – Performance Monitoring</h3>
+    <p>
+        CPU and memory performance monitoring on a
+        physical Windows 10 workstation integrated
+        with Nagios through NSClient++.
+    </p>
+    <img
+        src="images/nagios/nagios-rrdtool-dashboard2.png"
+        alt="Windows 10 CPU and memory monitoring graphs"
+        class="project-image"
+        loading="lazy"
+    >
+</div>
+
+<div class="validation-step">
+    <h3>Bacula Backup Server – Performance Monitoring</h3>
+    <p>
+        Historical system load and memory monitoring
+        on the Debian-based Bacula backup server,
+        supporting infrastructure health assessment.
+    </p>
+    <img
+        src="images/nagios/nagios-rrdtool-dashboard3.png"
+        alt="Bacula backup server system load and memory monitoring graphs"
+        class="project-image"
+        loading="lazy"
+    >
+</div>
+
+</section>
+
+<section class="project-section">
+    <h2>Email Alerts &amp; Validation</h2>
+
+
+<div class="validation-step">
+    <h3>1. CRITICAL Alert – Simulated Service Failure</h3>
+
+    <p>
+        Configured Nagios Core to send automated email
+        notifications through Exim4 using a Gmail SMTP
+        smarthost. A controlled service failure was
+        simulated using the Nagios check_dummy plugin.
+    </p>
+
+    <p>
+        Nagios detected the CRITICAL state and successfully
+        delivered an email notification to the configured
+        monitoring contact.
+    </p>
+
+
+</div>
+
+<div class="validation-step">
+    <h3>Email Notification Validation</h3>
+
+    <p>
+        Successfully verified automated Nagios email
+        notifications, including a simulated CRITICAL
+        Bacula backup alert and a separate RECOVERY
+        notification for the System Load service.
+    </p>
+
+    <img
+        src="images/nagios/nagios-email-alerts-validation.png"
+        alt="Nagios CRITICAL and RECOVERY email notification examples"
+        class="project-image"
+        loading="lazy"
+    >
+
+
+
+
+    <div class="project-result">
+        <h3>Validation Result</h3>
+        <p>
+            Successfully validated infrastructure monitoring,
+            custom Bacula job checks, automated email alerts
+            and recovery notifications.
+        </p>
+    </div>
+</section>
+
+<section class="project-section">
+    <h2>Challenges &amp; Troubleshooting</h2>
+
+    <div class="troubleshooting-card">
+        <h3>Apache CGI Configuration</h3>
+        <p>
+            Resolved an issue where Nagios CGI pages were
+            downloaded instead of executed by enabling
+            Apache CGI support and correcting the CGI paths.
+        </p>
+    </div>
+
+    <div class="troubleshooting-card">
+        <h3>NRPE Configuration</h3>
+        <p>
+            Resolved duplicate command definitions, adjusted
+            CPU load thresholds for the monitored workstation
+            and validated remote monitoring checks.
+        </p>
+    </div>
+
+    <div class="troubleshooting-card">
+        <h3>Windows Monitoring Availability</h3>
+        <p>
+            Accounted for workstation sleep behaviour by
+            disabling notifications for the Windows host
+            and its services while retaining active monitoring.
+        </p>
+    </div>
+    <div class="troubleshooting-card">
+    <h3>Bacula Backup Monitoring</h3>
+    <p>
+        Developed and validated custom Nagios checks to monitor
+        Bacula backup jobs through the PostgreSQL catalogue.
+        Resolved plugin configuration issues and verified the
+        status of Linux and Windows backup jobs.
+    </p>
+</div>
+
+<div class="troubleshooting-card">
+    <h3>Email Alert Configuration</h3>
+    <p>
+        Configured Exim4 with Gmail SMTP relay and validated
+        Nagios email notifications. Tested CRITICAL alerts
+        using a simulated Bacula backup failure and separately
+        verified RECOVERY notifications for System Load.
+    </p>
+</div>
+</section>
+
+<section class="project-section">
+
+<section class="project-section">
+    <h2>Monitoring Validation</h2>
+
+    <p>
+        Monitoring checks were tested across Linux, Windows
+        and Bacula infrastructure to verify host availability,
+        service health, backup job status and email notifications.
+    </p>
+
+    <div class="troubleshooting-card">
+        <h3>Linux Monitoring</h3>
+        <p>
+            Verified PING, SSH and NRPE connectivity.
+            Validated CPU load, memory and disk monitoring
+            with appropriate thresholds.
+        </p>
+    </div>
+
+    <div class="troubleshooting-card">
+        <h3>Windows Monitoring</h3>
+        <p>
+            Validated remote monitoring using NSClient++,
+            including Windows host availability and
+            system resource checks.
+        </p>
+    </div>
+
+    <div class="troubleshooting-card">
+        <h3>Bacula Backup Monitoring</h3>
+        <p>
+            Verified custom Nagios checks against the Bacula
+            PostgreSQL catalogue to identify backup job
+            status and detect simulated failures.
+        </p>
+    </div>
+
+    <div class="troubleshooting-card">
+        <h3>Email Notification Testing</h3>
+        <p>
+            Confirmed delivery of a CRITICAL notification
+            from a simulated Bacula backup failure and,
+            independently, a RECOVERY notification
+            for the System Load service.
+        </p>
+    </div>
+</section>
+
+<section class="project-section">
+    <h2>Project Outcomes</h2>
+
+    <p>
+        Successfully designed, deployed and validated a
+        multi-platform infrastructure monitoring environment
+        using Nagios Core, NRPE, NSClient++ and RRDTool.
+    </p>
+
+    <div class="troubleshooting-card">
+        <h3>Infrastructure Coverage</h3>
+        <p>
+            Monitored 4 hosts and 40 services across Linux,
+            Windows and Bacula backup infrastructure.
+        </p>
+    </div>
+
+    <div class="troubleshooting-card">
+        <h3>Performance Monitoring</h3>
+        <p>
+            Developed 11 historical performance graphs using
+            RRDTool, with automated metric collection and
+            graph generation through systemd timers.
+        </p>
+    </div>
+
+    <div class="troubleshooting-card">
+        <h3>Backup Integration</h3>
+        <p>
+            Integrated Nagios with the Bacula PostgreSQL
+            catalogue to monitor backup job health and
+            identify unsuccessful backup operations.
+        </p>
+    </div>
+
+    <div class="troubleshooting-card">
+        <h3>Alerting and Validation</h3>
+        <p>
+            Configured email notifications through Exim4
+            and Gmail SMTP relay. Validated CRITICAL
+            notifications using a simulated Bacula failure
+            and independently confirmed RECOVERY
+            notifications for the System Load service.
+        </p>
+    </div>
+</section>
+
+
+<section class="project-section">
+    <h2>Skills Demonstrated</h2>
+
+
+
+
+
+
+
+
+
+
+    <div class="skills-grid">
+        <div class="skill-card">
+            <h3>Linux Administration</h3>
+            <p>Debian Server</p>
+            <p>systemd</p>
+            <p>Apache</p>
+        </div>
+
+        <div class="skill-card">
+            <h3>Infrastructure Monitoring</h3>
+            <p>Nagios Core</p>
+            <p>NRPE</p>
+            <p>NSClient++</p>
+        </div>
+
+        <div class="skill-card">
+            <h3>Automation</h3>
+            <p>Bash Scripting</p>
+            <p>Custom Plugins</p>
+            <p>systemd Timers</p>
+        </div>
+
+        <div class="skill-card">
+            <h3>Performance Monitoring</h3>
+            <p>RRDTool</p>
+            <p>Resource Monitoring</p>
+            <p>Historical Graphs</p>
+        </div>
+
+        <div class="skill-card">
+            <h3>Alerting</h3>
+            <p>Exim4</p>
+            <p>SMTP Relay</p>
+            <p>Incident Recovery</p>
+        </div>
+
+        <div class="skill-card">
+            <h3>Troubleshooting</h3>
+            <p>Service Diagnostics</p>
+            <p>Configuration Validation</p>
+            <p>Network Connectivity</p>
+        </div>
+    </div>
+</section>
+
+
+<section class="project-section">
+    <h2>Technical Documentation</h2>
+
+    <p>
+        Explore the complete technical documentation for this
+        laboratory, including installation, configuration,
+        monitoring checks, troubleshooting and validation.
+    </p>
+
+    <div class="cv-container">
+        <a
+            href="documents/labs/Nagios_Monitoring_Lab.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="cv-button"
+        >
+            View Nagios Technical Documentation (PDF)
+        </a>
+    </div>
+</section>
+
+
+
+
+
+</body>
+</html>

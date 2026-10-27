@@ -1,0 +1,357 @@
+
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Active Directory Migration Lab | Jhonny Castillo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="active-directory-page">
+
+<a href="index.html#projects" class="back-link">
+    &larr; Back to Projects
+</a>
+
+<header class="project-header">
+    <h1>Active Directory Migration Lab</h1>
+    <p>
+        Windows Server 2008 R2 to Windows Server 2022 |
+        Active Directory Domain Services |
+        PowerShell | Infrastructure Modernisation
+    </p>
+</header>
+
+<section class="project-section project-overview">
+    <h2>Project Overview</h2>
+
+    <p>
+        Designed and implemented an Active Directory migration
+        laboratory to modernise a legacy Windows Server 2008 R2
+        infrastructure using Windows Server 2022.
+    </p>
+
+    <p>
+        The project involved creating a new Active Directory forest,
+        migrating organisational units, users, security groups,
+        group memberships and computer accounts, and reviewing
+        legacy Group Policy Objects.
+    </p>
+
+    <p>
+        The migration was performed in an isolated VirtualBox
+        environment while preserving the original Active Directory
+        domain and its configuration.
+    </p>
+</section>
+
+<section class="project-section">
+    <h2>Lab Architecture</h2>
+
+    <div class="architecture">
+
+        <div class="architecture-box">
+            <h3>PADA-AD</h3>
+            <p>Windows Server 2008 R2</p>
+            <p>Legacy Domain Controller</p>
+            <p>Domain: wfr-fr.net</p>
+            <p>Migration IP: 172.20.10.10</p>
+        </div>
+
+        <div class="architecture-box">
+            <h3>CASTILLUX-DC01</h3>
+            <p>Windows Server 2022</p>
+            <p>New Domain Controller</p>
+            <p>Domain: ad.castillux.com</p>
+            <p>Migration IP: 172.20.10.20</p>
+        </div>
+
+        <div class="architecture-box">
+            <h3>VIRTUALISATION HOST</h3>
+            <p>HP Z400 Workstation</p>
+            <p>Ubuntu Linux</p>
+            <p>Oracle VirtualBox</p>
+        </div>
+
+    </div>
+</section>
+
+<section class="project-section implementation">
+    <h2>Migration Implementation</h2>
+
+    <h3>Active Directory Forest Deployment</h3>
+    <p>
+        Deployed Windows Server 2022 and configured Active Directory
+        Domain Services, DNS and the new ad.castillux.com forest.
+    </p>
+
+    <h3>Organisational Unit Migration</h3>
+    <p>
+        Recreated 20 organisational units while preserving the
+        hierarchical structure of the legacy domain.
+    </p>
+
+    <h3>User and Security Group Migration</h3>
+    <p>
+        Migrated 129 user accounts, 21 security groups and
+        153 direct user-to-group memberships.
+        Imported accounts were initially disabled for safety.
+    </p>
+
+    <h3>Computer Account Migration</h3>
+    <p>
+        Exported an inventory of 223 legacy computer objects
+        and recreated 222 disabled computer accounts in the
+        new domain, preserving their organisational unit locations.
+    </p>
+
+    <p>
+        The original domain controller was excluded.
+        Physical computers were not automatically joined to
+        the new domain.
+    </p>
+
+    <h3>Group Policy Migration</h3>
+    <p>
+        Backed up 38 legacy Group Policy Objects and imported
+        10 selected policies under LAB-prefixed names.
+        Legacy references and security settings were reviewed.
+        Imported policies remained unlinked to prevent
+        unintended configuration changes.
+    </p>
+</section>
+
+<section class="project-section">
+    <h2>Troubleshooting</h2>
+
+    <div class="validation-step">
+        <h3>PowerShell Computer Import Errors</h3>
+        <p>
+            The initial bulk import encountered 222 errors
+            caused by the computer existence-check logic.
+        </p>
+        <p>
+            Replaced the failing identity lookup with a
+            comparison against existing computer names,
+            successfully importing the remaining objects.
+        </p>
+    </div>
+
+    <div class="validation-step">
+        <h3>Legacy Group Policy References</h3>
+        <p>
+            Identified outdated domain references, printer
+            connections, network drive mappings and firewall
+            exceptions. Reviewed the imported policies without
+            applying them to production systems.
+        </p>
+    </div>
+</section>
+
+<section class="project-section">
+    <h2>Validation &amp; Results</h2>
+
+    <div class="validation-step">
+        <h3>Active Directory Health</h3>
+        <p>
+            Verified domain controller advertising, directory
+            services and DNS using DCDIAG. Confirmed that
+            SYSVOL and NETLOGON shares were available.
+        </p>
+    </div>
+
+    <div class="validation-step">
+        <h3>Migration Results</h3>
+        <ul>
+            <li>20 organisational units migrated</li>
+            <li>21 security groups migrated</li>
+            <li>129 user accounts migrated</li>
+            <li>153 group memberships verified</li>
+            <li>222 computer accounts imported</li>
+            <li>10 Group Policy Objects imported and reviewed</li>
+        </ul>
+    </div>
+</section>
+
+
+<section class="project-section">
+    <h2>Migration Evidence &amp; Screenshots</h2>
+    <p>Selected evidence from the Active Directory migration laboratory.</p>
+    <div class="validation-step">
+        <h3>Server Deployment and Initial Configuration</h3>
+        <figure>
+            <img src="images/active-directory/ad-01.png"
+                 alt="Initial Windows Server deployment"
+                 loading="lazy">
+            <figcaption>Figure 1 — Initial Windows Server deployment.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-03.png"
+                 alt="Server identity and configuration"
+                 loading="lazy">
+            <figcaption>Figure 2 — Server identity and configuration.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-04.png"
+                 alt="Infrastructure preparation"
+                 loading="lazy">
+            <figcaption>Figure 3 — Infrastructure preparation.</figcaption>
+        </figure>
+    </div>
+    <div class="validation-step">
+        <h3>Network Configuration</h3>
+        <figure>
+            <img src="images/active-directory/ad-15.png"
+                 alt="Network configuration evidence"
+                 loading="lazy">
+            <figcaption>Figure 4 — Network configuration evidence.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-16.png"
+                 alt="Migration network preparation"
+                 loading="lazy">
+            <figcaption>Figure 5 — Migration network preparation.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-17.png"
+                 alt="Network connectivity configuration"
+                 loading="lazy">
+            <figcaption>Figure 6 — Network connectivity configuration.</figcaption>
+        </figure>
+    </div>
+    <div class="validation-step">
+        <h3>Active Directory Migration</h3>
+        <figure>
+            <img src="images/active-directory/ad-36.png"
+                 alt="Migration preparation"
+                 loading="lazy">
+            <figcaption>Figure 7 — Migration preparation.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-39.png"
+                 alt="Directory migration evidence"
+                 loading="lazy">
+            <figcaption>Figure 8 — Directory migration evidence.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-42.png"
+                 alt="Active Directory migration configuration"
+                 loading="lazy">
+            <figcaption>Figure 9 — Active Directory migration configuration.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-44.png"
+                 alt="Migration implementation evidence"
+                 loading="lazy">
+            <figcaption>Figure 10 — Migration implementation evidence.</figcaption>
+        </figure>
+    </div>
+    <div class="validation-step">
+        <h3>Group Policy Migration and Review</h3>
+        <figure>
+            <img src="images/active-directory/ad-50.png"
+                 alt="Group Policy migration evidence"
+                 loading="lazy">
+            <figcaption>Figure 11 — Group Policy migration evidence.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-57.png"
+                 alt="Group Policy review"
+                 loading="lazy">
+            <figcaption>Figure 12 — Group Policy review.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-64.png"
+                 alt="Imported Group Policy inspection"
+                 loading="lazy">
+            <figcaption>Figure 13 — Imported Group Policy inspection.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-67.png"
+                 alt="Legacy policy assessment"
+                 loading="lazy">
+            <figcaption>Figure 14 — Legacy policy assessment.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-70.png"
+                 alt="Group Policy configuration review"
+                 loading="lazy">
+            <figcaption>Figure 15 — Group Policy configuration review.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-73.png"
+                 alt="Legacy settings assessment"
+                 loading="lazy">
+            <figcaption>Figure 16 — Legacy settings assessment.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-79.png"
+                 alt="Group Policy validation"
+                 loading="lazy">
+            <figcaption>Figure 17 — Group Policy validation.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-83.png"
+                 alt="Imported policy configuration"
+                 loading="lazy">
+            <figcaption>Figure 18 — Imported policy configuration.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-85.png"
+                 alt="Windows Firewall policy report"
+                 loading="lazy">
+            <figcaption>Figure 19 — Windows Firewall policy report.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-90.png"
+                 alt="File Share Audit policy report"
+                 loading="lazy">
+            <figcaption>Figure 20 — File Share Audit policy report.</figcaption>
+        </figure>
+    </div>
+    <div class="validation-step">
+        <h3>Validation and Troubleshooting</h3>
+        <figure>
+            <img src="images/active-directory/ad-92.png"
+                 alt="Directory services validation"
+                 loading="lazy">
+            <figcaption>Figure 21 — Directory services validation.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-93.png"
+                 alt="Migrated account verification"
+                 loading="lazy">
+            <figcaption>Figure 22 — Migrated account verification.</figcaption>
+        </figure>
+        <figure>
+            <img src="images/active-directory/ad-94.png"
+                 alt="Final migration verification"
+                 loading="lazy">
+            <figcaption>Figure 23 — Final migration verification.</figcaption>
+        </figure>
+    </div>
+</section>
+
+<section class="project-section">
+    <h2>Skills Demonstrated</h2>
+
+    <ul>
+        <li>Windows Server 2008 R2 and Windows Server 2022</li>
+        <li>Active Directory Domain Services</li>
+        <li>DNS administration</li>
+        <li>PowerShell automation and troubleshooting</li>
+        <li>Organisational Unit and Group Policy management</li>
+        <li>Active Directory migration planning</li>
+        <li>Oracle VirtualBox and virtual networking</li>
+        <li>Infrastructure validation and documentation</li>
+    </ul>
+</section>
+
+<a href="index.html#projects" class="back-link">
+    &larr; Back to Projects
+</a>
+
+</body>
+</html>
+

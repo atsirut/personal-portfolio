@@ -714,3 +714,53 @@ nav {
         white-space: nowrap;
     }
 }
+
+/* Active Directory Migration Lab - Screenshot Gallery */
+
+.active-directory-page .validation-step figure {
+    margin: 24px auto;
+    padding: 16px;
+    max-width: 850px;
+    text-align: center;
+}
+
+.active-directory-page .validation-step figure img {
+    display: block;
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    margin: 0 auto;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.active-directory-page .validation-step figcaption {
+    margin-top: 12px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    text-align: center;
+    color: #cbd5e1;
+}
+
+@media (max-width: 768px) {
+    .active-directory-page .validation-step figure {
+        padding: 8px;
+        margin: 16px auto;
+    }
+}
+
+/* Active Directory Lab - List alignment */
+
+.active-directory-page .project-section ul {
+    display: inline-block;
+    text-align: left;
+    padding-left: 24px;
+    margin: 16px auto;
+    max-width: 100%;
+}
+
+.active-directory-page .project-section li {
+    padding-left: 4px;
+    margin-bottom: 8px;
+    line-height: 1.6;
+}
